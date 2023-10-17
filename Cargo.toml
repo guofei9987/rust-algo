@@ -3,6 +3,7 @@ name = "rust-algo"
 version = "0.0.1"
 edition = "2021"
 authors = ["Guo Fei <me@guofei.site>"]
+description = "rust algorithms"
 license = "MIT"
 
 [dependencies]
