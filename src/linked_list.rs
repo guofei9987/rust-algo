@@ -8,9 +8,9 @@ free nodes 也可以提前构造和存下来，用空间换时间
 
 
 pub struct ArenaList<T> {
-    nodes: Vec<NodeInfo<T>>,
-    first_free: usize,
-    len: usize,
+     nodes: Vec<NodeInfo<T>>,
+     first_free: usize,
+     len: usize,
 }
 
 struct NodeInfo<T> {
@@ -37,6 +37,6 @@ impl<'a, T> Node<'a, T> {
 
 #[cfg(test)]
 mod tests {
-  
+
 }
 
