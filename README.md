@@ -22,7 +22,7 @@ ArenaList 数据类型的取舍
 
 ArenaList 要唯一
 - 如果每个链表对应自己的 ArenaList，那么链表的 "拆分"、"合并" 这类原本 O(1) 的操作，会有大量 nodes 在不同 Vec 上批量移动。复杂度变成 O(n)
-- 所以多个链表共用同一个 ArenaList
+- 所以多个链表共用同一个 ArenaList. Tree/Graph 这类允许合并/拆分的数据结构也是一样。
 
 
 维护 holes 的缺点和优点
