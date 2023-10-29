@@ -50,3 +50,7 @@ ArenaList 要唯一
 - 改进：引入一个 `prev: Vec<usize>` 来记录节点的上游。
     - 缺点：额外维护关于边的数据量翻倍。新增边的性能损耗也高多一点（因为要更新 `prev`）。
     - 优点：`compact()` 处理单个空洞效率是 O(1)，总的效率为 O(m)。如果不维护 `holes` 总的效率为 O(n)
+
+又改进
+- 如果我在任意阶段都小心维护 `next` 和 `prev`，并且及时处理 节点为 None 的情况。那么就压根不会出现空洞。
+- 这样就不需要维护 `holes`，也不需要 compact 方法了。`node: Vec<Option<Node<T>>>` 可以改为 `node: Vec<Node<T>>`
