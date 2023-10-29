@@ -118,39 +118,6 @@ impl<T> ArenaList<T> {
     fn compact(&mut self) {
         // 消除空洞
     }
-
-    // fn compact(&mut self) {
-    //     self.holes.sort();// 排序
-    //
-    //     while !self.holes.is_empty() {
-    //         let last_node = self.nodes.pop();
-    //         match last_node {
-    //             None => break, // self.nodes 已空，就跳出
-    //             Some(last_node) => {
-    //                 match last_node {
-    //                     None => {
-    //                         // 如果最后一个是空节点，那么继续下次循环，直到遇到非空节点
-    //
-    //                         // TODO: holes 需要改成 let holes=    VecDeque::from(&self.holes);
-    //                         // 遇到空节点，必然 holes 有对应的数（assert 一下）
-    //                         // 对应的数要删除
-    //                         self.holes.contains(),
-    //                         continue;
-    //                     }
-    //                     Some(last_node) => {
-    //                         let
-    //                     }
-    //                 }
-    //             }
-    //         }
-    //     }
-    //
-    //     let hole = self.holes.pop();
-    //     match hole {
-    //         None => continue,
-    //         Some(hole_idx) => {}
-    //     }
-    // }
 }
 
 
