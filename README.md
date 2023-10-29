@@ -54,3 +54,4 @@ ArenaList 要唯一
 又改进
 - 如果我在任意阶段都小心维护 `next` 和 `prev`，并且及时处理 节点为 None 的情况。那么就压根不会出现空洞。
 - 这样就不需要维护 `holes`，也不需要 compact 方法了。`node: Vec<Option<Node<T>>>` 可以改为 `node: Vec<Node<T>>`
+- 移除的过程中，使用 `swap_remove()` 达到 O(1) 性能，而不是 `remove()` 的 O(n) 性能
