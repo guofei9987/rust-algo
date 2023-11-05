@@ -1,7 +1,7 @@
 pub struct Node<T> {
     data: Option<T>,
-    next_idx: Option<usize>,
-    prev_idx: Option<usize>,
+    pub next_idx: Option<usize>,
+    pub prev_idx: Option<usize>,
 }
 
 pub struct ArenaList<T> {
@@ -49,7 +49,7 @@ impl<T> ArenaList<T> {
     }
 
 
-    // 删除节点
+    // 删除节点，并且把上游节点和下游节点连接起来
     fn del_node(&mut self, idx: usize) -> bool {
         if idx >= self.nodes.len() {
             return false;
@@ -59,15 +59,20 @@ impl<T> ArenaList<T> {
 
         let mut node_to_del = self.nodes.swap_remove(idx);
 
+        // 上游节点和下游节点
+        let src_idx = node_to_del.prev_idx;
+        let dst_idx = node_to_del.next_idx;
+
+
         // step1: 上游节点不再指向它
         match node_to_del.prev_idx {
             None => { panic!("不可能") }
             Some(prev_idx) => {
                 if prev_idx == last_idx {
                     // 如果上游节点是最后一个，注意它已经被移动到 idx 位置了
-                    self.nodes[idx].next_idx = None;
+                    self.nodes[idx].next_idx = dst_idx;
                 } else {
-                    self.nodes[prev_idx].next_idx = None;
+                    self.nodes[prev_idx].next_idx = dst_idx;
                 }
             }
         }
@@ -77,9 +82,9 @@ impl<T> ArenaList<T> {
             None => {}
             Some(next_idx) => {
                 if next_idx == last_idx {
-                    self.nodes[idx].prev_idx = None;
+                    self.nodes[idx].prev_idx = src_idx;
                 } else {
-                    self.nodes[next_idx].prev_idx = None;
+                    self.nodes[next_idx].prev_idx = src_idx;
                 }
             }
         }
@@ -176,15 +181,20 @@ impl<'a, T> DoubleLinkedList<'a, T> {
     }
 
 
-    pub fn insert(&mut self, num: usize, data: T) {
+    pub fn insert(&mut self, mut num: usize, data: T) {
         let mut curr_idx = self.root_idx;
-        let mut num = num;
         let new_idx = self.add_node(Some(data));
 
         loop {
             if num <= 0 {
-                self.owner.nodes[new_idx].next_idx = self.owner.nodes[curr_idx].next_idx;
-                self.owner.nodes[curr_idx].next_idx = Some(new_idx);
+                match self.owner.nodes[curr_idx].next_idx {
+                    None => {}
+                    Some(next_idx) => {
+                        self.owner.add_link(new_idx, next_idx);
+                    }
+                }
+                self.owner.add_link(curr_idx, new_idx);
+
                 break;
             }
 
@@ -199,9 +209,42 @@ impl<'a, T> DoubleLinkedList<'a, T> {
         }
     }
 
-    pub fn get(&self, num: usize) {
+    pub fn get(&self, mut num: usize) -> Option<&T> {
         let mut curr_idx = self.root_idx;
+        loop {
+            if num <= 0 {
+                match self.owner.nodes[curr_idx].next_idx {
+                    None => { return None; }
+                    Some(next_idx) => {
+                        return Option::from(&self.owner.nodes[next_idx].data);
+                    }
+                }
+            }
+            match self.owner.nodes[curr_idx].next_idx {
+                None => { return None; }
+                Some(next_idx) => {
+                    curr_idx = next_idx;
+                }
+            }
+            num -= 1;
+        }
     }
 
-    pub fn del() {}
+    pub fn del(&mut self, mut num: usize) {
+        let mut curr_idx = self.root_idx;
+        loop {
+            if num <= 0 {
+                match self.owner.nodes[curr_idx].next_idx {
+                    None => return,
+                    Some(next_idx) => { self.owner.del_node(next_idx); }
+                }
+                return;
+            }
+            match self.owner.nodes[curr_idx].next_idx {
+                None => { return; }
+                Some(next_idx) => curr_idx = next_idx
+            }
+            num -= 1;
+        }
+    }
 }
