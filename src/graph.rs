@@ -1,4 +1,6 @@
 /*
+本项目的图算法不再更新，最新版看这里： https://github.com/guofei9987/rs-graphs
+
 功能
 - 增
     - 增加节点 add_node
