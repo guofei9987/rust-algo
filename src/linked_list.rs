@@ -232,6 +232,3 @@ mod tests {
         println!("{:?}", linked_list.to_vec());
     }
 }
-
-
-
