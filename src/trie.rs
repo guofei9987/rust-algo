@@ -10,7 +10,6 @@
 
 struct Node {
     next_idx: [usize; 256],
-    has_child: bool,
     is_word: bool,
 }
 
@@ -29,7 +28,7 @@ impl Trie {
     }
 
     fn add_node(&mut self) -> usize {
-        self.nodes.push(Node { next_idx: [0; 256], has_child: false, is_word: false });
+        self.nodes.push(Node { next_idx: [0; 256], is_word: false });
         self.nodes.len() - 1
     }
 
@@ -38,7 +37,6 @@ impl Trie {
         for chr in word.bytes() {
             if self.nodes[curr_idx].next_idx[chr as usize] == 0 {
                 self.nodes[curr_idx].next_idx[chr as usize] = self.add_node();
-                self.nodes[curr_idx].has_child = true;
             }
             curr_idx = self.nodes[curr_idx].next_idx[chr as usize]
         }
@@ -48,20 +46,11 @@ impl Trie {
 
     pub fn search(&self, text: &str) -> bool {
         let mut curr_idx = 0;
-        let mut idx = 0;
-        let text = text.as_bytes();
-        while self.nodes[curr_idx].has_child && idx < text.len() {
-            let chr = text[idx] as usize;
-            if self.nodes[curr_idx].next_idx[chr] == 0 {
-                return false;
-            } else { curr_idx = self.nodes[curr_idx].next_idx[chr] }
-            idx += 1;
+        for &chr in text.as_bytes() {
+            let next_idx = self.nodes[curr_idx].next_idx[chr as usize];
+            if next_idx == 0 { return false; }
+            curr_idx = next_idx;
         }
-
-        if idx < text.len() {
-            return false;
-        }
-
-        return self.nodes[curr_idx].is_word;
+        self.nodes[curr_idx].is_word
     }
 }
